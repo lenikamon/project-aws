@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatBot LCC</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+    header {
+      background: #1e3a8a;
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .chatbox {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      height: 300px;
+      padding: 10px;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+    .input-area {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+    }
+    button {
+      padding: 12px 18px;
+      background: #1e3a8a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #162e6c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ChatBot LCC</h1>
+  </header>
+
+  <div class="container">
+    <h2>Inicio</h2>
+    <p>Bienvenid@ al asistente inteligente de LCC Aquí podrás consultar:</p>
+    <ul>
+      <li>Reglamentos</li>
+      <li>Planes de estudio</li>
+      <li>Eventos y avisos</li>
+      <li> y más</li>
+    </ul>
+
+    <div class="chatbox" id="chatbox">
+      <!-- Mensajes aparecerán aquí -->
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Preguntame....." />
+      <button onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const box = document.getElementById('chatbox');
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      box.innerHTML += `<p><strong>🧑🏻‍💻:</strong> ${text}</p>`;
+      input.value = '';
+      box.scrollTop = box.scrollHeight;
+
+      // Placeholder de respuesta
+      setTimeout(() => {
+        box.innerHTML += `<p><strong>💻:</strong></p>`;
+        box.scrollTop = box.scrollHeight;
+      }, 400);
+    }
+  </script>
+</body>
+</html>
