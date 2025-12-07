@@ -1,4 +1,13 @@
 # ChatBot LCC con AWS
+**Autores:** 
+
+*Balderrama Dominguez Gael*
+
+*Fimbres Delgado Silvia Mariana* 
+
+*Montoya Valencia Lenika Elizabeth*
+
+------
 
 Este proyecto consiste en el desarrollo de un asistente inteligente para la Licenciatura en Ciencias de la Computación (LCC) de la Universidad de Sonora, utilizando servicios administrados de AWS.
 
