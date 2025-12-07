@@ -107,8 +107,7 @@
     </div>
 
     <script>
-        // CRÍTICO: REEMPLAZA ESTA URL CON LA URL FINAL DE TU API GATEWAY
-        const API_GATEWAY_URL = 'https://YOUR_API_ID.execute-api.AWS_REGION.amazonaws.com/default/RAG_Backend';
+        const API_GATEWAY_URL = "";
 
         const chatbox = document.getElementById('chatbox');
         const userInput = document.getElementById('userInput');
@@ -136,34 +135,31 @@
             const userText = userInput.value.trim();
             if (!userText) return;
 
-            // Deshabilitar la entrada y el botón durante el envío
             userInput.disabled = true;
             sendButton.disabled = true;
 
-            // 1. Mostrar mensaje del usuario
+            // Mostrar mensaje del usuario
             appendMessage('user', userText);
             userInput.value = '';
 
-            // 2. Mostrar indicador de carga del bot
+            // Mostrar indicador de carga del bot
             let loadingMessage = appendMessage('bot', 'Escribiendo respuesta', true);
             
             try {
-                // 3. Llamada Asíncrona al API Gateway (POST)
+                // 3. Llamada Asíncrona al API Gateway 
                 const response = await fetch(API_GATEWAY_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    // El formato del cuerpo debe coincidir con lo que espera tu Lambda
                     body: JSON.stringify({ question: userText }) 
                 });
 
                 const data = await response.json();
                 
-                // 4. Mostrar respuesta
+                // Mostrar respuesta
                 let answerText;
                 if (response.ok) {
-                    // Esperamos que la respuesta del cuerpo tenga el formato { "answer": "..." }
                     answerText = data.answer || "Error: El Proxy no devolvió una respuesta válida.";
                 } else {
                     // Manejo de errores HTTP (400, 500)
@@ -179,7 +175,7 @@
                 loadingMessage.classList.remove('loading');
                 loadingMessage.innerHTML = `<strong>💻:</strong> Error de Conexión: No se pudo contactar al API Gateway. Revisa la URL y los permisos CORS de tu API.`;
             } finally {
-                // 5. Restaurar la interfaz
+                // Restaurar la interfaz
                 userInput.disabled = false;
                 sendButton.disabled = false;
                 userInput.focus();
@@ -187,7 +183,7 @@
             }
         }
 
-        // Permitir enviar con Enter
+        //Permitir enviar con Enter
         userInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
