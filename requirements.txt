@@ -1,0 +1,17 @@
+
+transformers==4.38.2
+accelerate==0.27.2
+sentence-transformers==2.5.1
+langchain==0.1.12
+langchain-community==0.0.28
+chromadb>=0.5.0
+pysqlite3-binary
+numpy<2.0
+google-genai
+google-api-core
+boto3
+sagemaker
+python-dotenv
+requests
+beautifulsoup4
+pymupdf4llm

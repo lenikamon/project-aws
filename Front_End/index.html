@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatBot LCC - Asistente RAG Gemini</title>
+    <style>
+        /* --- ESTILOS CSS --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+        header {
+            background: #1e3a8a;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+        }
+        .chatbox {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            height: 350px; /* Aumentado para más mensajes */
+            padding: 15px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+        .input-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #aaa;
+        }
+        button {
+            padding: 12px 18px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #162e6c;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .user {
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+        .bot {
+            color: #333;
+            background: #e3f2fd;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        .loading::after {
+            content: '...';
+            animation: dot-animation 1s infinite step-start;
+        }
+        @keyframes dot-animation {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ChatBot LCC</h1>
+    </header>
+
+    <div class="container">
+        <h2>Asistente Inteligente RAG</h2>
+        <p>Bienvenid@ al asistente inteligente de LCC. Pregunta sobre reglamentos, planes de estudio, etc.</p>
+
+        <div class="chatbox" id="chatbox">
+            <p class="message bot">
+                <strong>🤖:</strong> Hola. Soy el asistente de LCC. Pregúntame, por ejemplo: "¿Quién es el responsable de tutorías?"
+            </p>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Escribe tu pregunta aquí..." />
+            <button id="sendButton" onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // CRÍTICO: REEMPLAZA ESTA URL CON LA URL FINAL DE TU API GATEWAY
+        const API_GATEWAY_URL = 'https://YOUR_API_ID.execute-api.AWS_REGION.amazonaws.com/default/RAG_Backend';
+
+        const chatbox = document.getElementById('chatbox');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+
+        function appendMessage(sender, text, isWaiting = false) {
+            const messageDiv = document.createElement('p');
+            messageDiv.classList.add('message');
+            
+            if (sender === 'user') {
+                messageDiv.innerHTML = `<span class="user">🧑🏻‍💻:</span> ${text}`;
+            } else {
+                messageDiv.classList.add('bot');
+                messageDiv.innerHTML = `<strong>🤖:</strong> ${text}`;
+                if (isWaiting) {
+                    messageDiv.classList.add('loading');
+                }
+            }
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+            return messageDiv;
+        }
+
+        async function sendMessage() {
+            const userText = userInput.value.trim();
+            if (!userText) return;
+
+            // Deshabilitar la entrada y el botón durante el envío
+            userInput.disabled = true;
+            sendButton.disabled = true;
+
+            // 1. Mostrar mensaje del usuario
+            appendMessage('user', userText);
+            userInput.value = '';
+
+            // 2. Mostrar indicador de carga del bot
+            let loadingMessage = appendMessage('bot', 'Escribiendo respuesta', true);
+            
+            try {
+                // 3. Llamada Asíncrona al API Gateway (POST)
+                const response = await fetch(API_GATEWAY_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    // El formato del cuerpo debe coincidir con lo que espera tu Lambda
+                    body: JSON.stringify({ question: userText }) 
+                });
+
+                const data = await response.json();
+                
+                // 4. Mostrar respuesta
+                let answerText;
+                if (response.ok) {
+                    // Esperamos que la respuesta del cuerpo tenga el formato { "answer": "..." }
+                    answerText = data.answer || "Error: El Proxy no devolvió una respuesta válida.";
+                } else {
+                    // Manejo de errores HTTP (400, 500)
+                    answerText = `❌ Error [${response.status}]: ${data.error || 'Fallo en la comunicación con el servidor.'}`;
+                }
+
+                loadingMessage.classList.remove('loading');
+                loadingMessage.innerHTML = `<strong>🤖:</strong> ${answerText}`;
+
+            } catch (error) {
+                // Manejo de errores de red o CORS
+                console.error('Error de red/CORS:', error);
+                loadingMessage.classList.remove('loading');
+                loadingMessage.innerHTML = `<strong>🤖:</strong> ❌ Error de Conexión: No se pudo contactar al API Gateway. Revisa la URL y los permisos CORS de tu API.`;
+            } finally {
+                // 5. Restaurar la interfaz
+                userInput.disabled = false;
+                sendButton.disabled = false;
+                userInput.focus();
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }
+        }
+
+        // Permitir enviar con Enter
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Enfocar el input al cargar la página
+        window.onload = () => userInput.focus();
+    </script>
+</body>
+</html>

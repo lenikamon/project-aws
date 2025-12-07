@@ -1,0 +1,11 @@
+# Archivos de seguridad
+vars.env
+*.tar.gz
+model_proxy.tar.gz
+
+# Archivos de caché y temporales
+__pycache__
+.ipynb_checkpoints
+model_deploy_proxy/
+data/Clean_Text/
+data/chroma_db/
