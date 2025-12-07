@@ -1,74 +1,78 @@
-# Projecto AWS - CHATBOT LCC
 
-Plataforma web con un chatbot inteligente que responde preguntas sobre información institucional específicamente sobre la *Licenciatura en Ciencias de la Computación* de la *Universidad de Sonora* usando **IA generativa** y **RAG**, desplegada en **AWS** con **API Gateway**, **SageMaker** y **Amplify**, e integrada con Cognito para autenticación.
-![Mi imagen](./img/services.png)
+-----
 
-### Página web 
-Diseñar tu interfaz gráfica, con las herramientas de tu elección pero que AWS Amplify soporte. Una vez creada tu carpeta, subirla a AWS Amplify , donde wste servicio te permite crear y publicar aplicaciones web o móviles de manera rápida sin tener que configurar un servidor.  Al igual que agregar un firewall básico con el servicio de Amplify.
+#  Projecto AWS - CHATBOT LCC
 
+Plataforma web con un chatbot inteligente que responde preguntas sobre información institucional específicamente sobre la Licenciatura en Ciencias de la Computación de la Universidad de Sonora usando IA generativa y RAG, desplegada en AWS con API Gateway, SageMaker y Amplify, e integrada con Cognito para autenticación.
 
-Pasos generales:
-- Diseñar la UI (estructura, botones, chatbot, estilos).
-- Crear una carpeta que contenga el sitio (index.html, CSS, JS).
-- Subir el proyecto a AWS Amplify → Hosting, seleccionando Deploy without Git (ZIP upload).
+## I.  Adquisición de Datos y Despliegue del Proxy
 
-Amplify se encarga de:
+Esta fase asegura que los datos estén limpios, vectorizados y el **Proxy RAG** esté alojado en **SageMaker**.
 
-- - Desplegar y hostear la página.
-- - Proveer una URL pública.
-- - Agregar un firewall básico integrado para tráfico malicioso (protección mínima).
+### 1\. Documentos del RAG (S3 y Proceso Local)
 
-### Backend  
-Para procesar preguntas y comunicarse con SageMaker, se crea una función en AWS Lambda:
-Nombre: RAG_Backend
-Runtime: Python 3.12
-Con dependencias nativas de AWS (boto3) para invocar un endpoint de SageMaker.
+El proceso de ingesta local es fundamental para la calidad del RAG.
 
-La Lambda:
+  * **Adquisición de Datos:** El script **`Back_End/scraper.py`** se utiliza para la adquisición inicial de PDFs/HTML, guardándolos en `Back_End/Data/texts`.
+  * **Limpieza y Vectorización:** El script **`Back_End/deploy_full_stack.py`** ejecuta automáticamente la limpieza (`cleaner.py`), la vectorización (`rag_creator.py`), la creación del **Bucket S3** (si no existe), y sube los artefactos (el ZIP de la base de datos vectorial).
 
-- Recibe la pregunta.
-- Realiza comprobaciones de CORS.
-- Envía el texto al modelo desplegado en SageMaker.
-- Devuelve la respuesta generada.
-Esta función actúa como backend principal del chatbot.
+### 2\. Creación de Endpoint de SageMaker (El Proxy RAG)
 
-### Lambda + API Gateaway
-Conectar la función Lambda con una **API Gateway**. Por lo que primero se tiene que acceder a API Gateway y dar click en Create API, después: 
-- Elegir HTTP API (más simple)
-- Crear nueva integrada a Lambda:
-- Integration type: Lambda
-- Lambda: RAG_Backend
-- Crear ruta
-- Method: POST
-- Path: /chat
-- Habilitar CORS
-- Allow Origins: *
-- Allow Methods: OPTIONS,POST
-- **Deploy API**.
-*Copiar la URL resultante*
+El Endpoint aloja tu código de inferencia (`gemini_proxy.py`) que maneja la búsqueda RAG y la llamada de baja latencia a la API de Gemini.
 
-### Conectar HTML con API Gateway
-En un *script* dentro del htmml donde va el chatbot. Con esto la web se comunica directamente con Lambda mediante la API.
+| Opción | Comando Principal | Obtención del ENDPOINT\_NAME  |
+| :--- | :--- | :--- |
+| **Opción A: AUTOMÁTICA** | **`python Back_End/deploy_full_stack.py`** (Se ejecuta desde la carpeta `Back_End`) | El script inicia el despliegue. Copiar el nombre generado desde la consola de SageMaker una vez que el estado sea **`InService`**. |
+| **Opción B: MANUAL** | Ejecutar la última celda de despliegue en **`Notebook del Proyecto.ipynb`** (en SageMaker). | Copiar el nombre de la variable `predictor.endpoint_name` de la salida de la Notebook. |
 
-### Creación de Endpoint de SageMaker 
-Para crear un endpoint es necesario entrar a SageMaker → Inference → Endpoints, después seguir las siguientes instrucciones:
-- Elegir modelo Hugging Face (o el que usaste)
-- Crear endpoint (tarda unos minutos)
-- Copiar el ENDPOINT_NAME
-- Pégalo en tu Lambda
-- ENDPOINT_NAME = 'nombre-del-endpoint'
+-----
 
-### Documentos del RAG
-Para almacenar los documentos estáticos, es necesariocrear un *bucket* en **S3** , seguido de subir los documentos como Reglamentos, Datos de titulación, PDFs,etc.
-Al igual que la creación de un script que lee los documentos y extrae solo el texto(omite objetos de estilo y de más)
+## II.  Conexión de Servicios y Exposición Pública
 
- ### Seguridad 
- **AWS Cognito** es un servicio que proporciona autenticación, autorización y gestión de usuarios para aplicaciones web y móviles.
- Para poder gestionar tu aplicación utilizando este servico, se tiene que seguir los siguentes pasos:
-- Creat un User Pool
-- Crear APP Client
-- Seleccionar criterios (email,nombre,apellido, numero telefonico,etc.) dependiendo del usuario que se quiera crear
+Una vez que el Endpoint de SageMaker está **`InService`**, se configuran los *serverless* para la conectividad.
 
-Siguiendo estos pasos, se puede lograr un chatbot sencillo con gestión de usuario.
+### 3\. Backend: AWS Lambda (`RAG_Backend`)
 
-link: https://staging.d3503m3mxp9bxi.amplifyapp.com/?code=a541d8ac-7f6f-4834-b389-f38c61889363 
+La Lambda actúa como el ***bridge* seguro** de comunicación entre el API Gateway y el Endpoint de SageMaker.
+
+1.  **Crear Función:** Crear la función **`RAG_Backend`** (Runtime Python 3.12).
+2.  **Subir Código:** Subir el contenido del archivo **`Back_End/Lambda_Handler.py`** como código de la función.
+3.  **Permisos:** El **Rol de IAM** de la Lambda debe tener la política **`AmazonSageMakerRuntimeAccess`**.
+4.  **Inyección del Endpoint :** Agregar la variable de entorno:
+      * **Clave:** `ENDPOINT_NAME`
+      * **Valor:** Pega el nombre del Endpoint de SageMaker copiado en el Paso 2.
+
+### 4\. Lambda + API Gateway (Exposición Pública)
+
+Conectar la función Lambda con una **API Gateway** para obtener una URL pública HTTPS.
+
+1.  Acceder a **API Gateway** y dar clic en **Create API**.
+2.  Elegir **HTTP API** (más simple).
+3.  **Integración:** Crear una integración con la Lambda: `Integration type: Lambda` → `Lambda: RAG_Backend`.
+4.  **Ruta:** Crear la ruta `Method: POST` en `Path: /chat`.
+5.  **CORS:** Habilitar CORS (`Allow Origins: *`, `Allow Methods: OPTIONS, POST`).
+6.  **Deploy API** y **Copiar la URL resultante**.
+
+-----
+
+## III.  Frontend y Seguridad
+
+### 5\. Página Web (AWS Amplify)
+
+El frontend se encarga de la interfaz y la comunicación con el API.
+
+1.  **Conectar HTML:** Abrir el archivo **`Front_End/index.html`** y reemplazar la variable `API_GATEWAY_URL` con la URL copiada en el Paso 4.
+2.  **Subir a Amplify:** Subir la carpeta **`Front_End`** a **AWS Amplify** para el *hosting*.
+      * *Amplify se encarga de:* Desplegar, hostear la página y proveer una URL pública.
+
+### 6\. Seguridad (AWS Cognito)
+
+**AWS Cognito** proporciona autenticación y gestión de usuarios para la aplicación.
+
+1.  **Crear User Pool:** Crea un **User Pool** para definir los atributos de usuario (email, nombre, etc.).
+2.  **Crear App Client:** Crea un **App Client** para generar los identificadores necesarios.
+3.  **Implementación Web:** La lógica de *login* y *registro* se implementa en el Frontend usando los SDK de Cognito.
+
+-----
+
+**Link de Ejemplo:** [https://staging.d3503m3mxp9bxi.amplifyapp.com/?code=a541d8ac-7f6f-4834-b389-f38c61889363](https://staging.d3503m3mxp9bxi.amplifyapp.com/?code=a541d8ac-7f6f-4834-b389-f38c61889363)
