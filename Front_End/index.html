@@ -95,7 +95,7 @@
 
         <div class="chatbox" id="chatbox">
             <p class="message bot">
-                <strong>🤖:</strong> Hola. Soy el asistente de LCC. Pregúntame, por ejemplo: "¿Quién es el responsable de tutorías?"
+                <strong>💻:</strong> Hola. Soy el asistente de LCC. Pregúntame, por ejemplo: "¿Quién es el responsable de tutorías?"
             </p>
         </div>
 
@@ -121,7 +121,7 @@
                 messageDiv.innerHTML = `<span class="user">🧑🏻‍💻:</span> ${text}`;
             } else {
                 messageDiv.classList.add('bot');
-                messageDiv.innerHTML = `<strong>🤖:</strong> ${text}`;
+                messageDiv.innerHTML = `<strong>💻:</strong> ${text}`;
                 if (isWaiting) {
                     messageDiv.classList.add('loading');
                 }
@@ -166,17 +166,17 @@
                     answerText = data.answer || "Error: El Proxy no devolvió una respuesta válida.";
                 } else {
                     // Manejo de errores HTTP (400, 500)
-                    answerText = `❌ Error [${response.status}]: ${data.error || 'Fallo en la comunicación con el servidor.'}`;
+                    answerText = `Error [${response.status}]: ${data.error || 'Fallo en la comunicación con el servidor.'}`;
                 }
 
                 loadingMessage.classList.remove('loading');
-                loadingMessage.innerHTML = `<strong>🤖:</strong> ${answerText}`;
+                loadingMessage.innerHTML = `<strong>💻:</strong> ${answerText}`;
 
             } catch (error) {
                 // Manejo de errores de red o CORS
                 console.error('Error de red/CORS:', error);
                 loadingMessage.classList.remove('loading');
-                loadingMessage.innerHTML = `<strong>🤖:</strong> ❌ Error de Conexión: No se pudo contactar al API Gateway. Revisa la URL y los permisos CORS de tu API.`;
+                loadingMessage.innerHTML = `<strong>💻:</strong> Error de Conexión: No se pudo contactar al API Gateway. Revisa la URL y los permisos CORS de tu API.`;
             } finally {
                 // 5. Restaurar la interfaz
                 userInput.disabled = false;
