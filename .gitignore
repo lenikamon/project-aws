@@ -1,11 +1,13 @@
-# Archivos de seguridad
-vars.env
-*.tar.gz
-model_proxy.tar.gz
+var.env                   # Tu archivo de variables de entorno (var.env, no vars.env)
+*.tar.gz                  
+model_proxy.tar.gz        
 
-# Archivos de caché y temporales
-__pycache__
-.ipynb_checkpoints
-model_deploy_proxy/
-data/Clean_Text/
-data/chroma_db/
+__pycache__/             
+.ipynb_checkpoints/    
+.DS_Store                 
+
+model_deploy_proxy/      
+chroma_db_local/    
+
+# Carpetas de Datos Generadas
+Back_End/Data/Clean_Text/

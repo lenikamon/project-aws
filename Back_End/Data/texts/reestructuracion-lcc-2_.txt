@@ -1,0 +1,48 @@
+Reestructuración LCC – Licenciatura en Ciencias de la Computación
+Skip to content
+INICIO
+UNISON
+DEPARTAMENTO
+FACULTAD
+Top Menú
+Licenciatura en Ciencias de la Computación
+Departamento de Matemáticas
+Programa
+Presentación
+Misión  y Visión
+Directorio
+Alumnos
+Ingreso
+Egreso
+Servicio Social
+Idioma
+Trayectorias Escolares
+Culturest
+CENEVAL
+Plan de estudios
+Plan de Estudios 2025-2
+Plan de Estudios 2005-2
+Tesis
+LCC-HUB
+Reestructuración LCC
+Main Menu
+Reestructuración LCC
+La
+Licenciatura en Ciencias de la Computación (LCC)
+fue aprobada por el H. Colegio Académico de la Universidad de Sonora en el año 1998. Para su creación, se consideraron inicialmente los planes de estudio de carreras relacionadas con computación impartidas en el estado, en el país y en el extranjero. Posteriormente, se revisó el
+Marco de Referencia para la Evaluación del Comité de Ingeniería y Tecnología
+de los CIEES (Comités Interinstitucionales para la Evaluación de la Educación Superior), donde se presentaba un marco general para la creación o modificación de carreras en el área de ingeniería.
+Asimismo, se revisó el documento
+Computing Curricula 1991
+(ACM, 1991) de la ACM (Association for Computing Machinery), que presenta un estudio sistemático de las áreas que comprende la computación y una metodología para el diseño de carreras en dicha disciplina. Con base en este último documento, y tomando como modelo la carrera de Ciencias de la Computación que ofrece la Facultad de Ciencias de la UNAM, se procedió a elaborar el proyecto de esta licenciatura.
+En el año 2002, la Universidad de Sonora, de acuerdo con el Plan de Desarrollo Institucional 2001–2005, aprobó por parte del Colegio Académico los
+Lineamientos Generales para un Modelo Curricular de la Universidad de Sonora
+. Este documento tenía como propósito construir un modelo curricular donde la enseñanza se desarrollara en función del aprendizaje que realiza el alumno. Con el fin de adecuar el plan de estudios de 1998 a los nuevos lineamientos, se integró en 2004 una comisión conformada por profesores de tiempo completo de la LCC. Para la reestructuración se tomó como base el plan de 1998, realizando algunas modificaciones que lo alinearan con los nuevos lineamientos. El rediseño del plan de estudios fue aprobado en 2006.
+El 31 de mayo de 2018 se aprobó por el H. Colegio Académico el
+Modelo Educativo de la Universidad de Sonora
+, el cual plantea una nueva referencia educativa con las siguientes características: orientación a la formación integral del estudiante, considerándolo partícipe activo de la construcción de sus propios saberes, con visión internacional y respeto a la multiculturalidad; incluyente y promotor de la equidad; comprometido con la calidad, la evaluación y la rendición de cuentas; vinculado al sector productivo y social para la generación de alternativas en la solución de problemas de su entorno; orientado al desarrollo sustentable y sostenible; comprometido con el desarrollo del país y de la región a través de la transferencia de conocimiento y tecnología; promotor y ejecutor de una universidad inteligente, que utiliza sus recursos tecnológicos para evolucionar y mejorar.
+Este modelo fue revisado y actualizado por el H. Consejo Académico el 13 de diciembre de 2022, y publicado en la Gaceta UNISON en febrero de 2023 (UNISON, 2023). El rediseño busca generar un nuevo programa de la LCC acorde a este modelo educativo.
+Adicionalmente a los cambios metodológicos y estructurales, en estos años se ha experimentado un cambio importante a nivel mundial en el área de las ciencias de la computación. Estos cambios se ven reflejados en una serie de documentos con lineamientos generales para el desarrollo de diferentes currícula en distintos perfiles de la computación, desarrollados por una fuerza de trabajo conjunta entre el IEEE (Institute for Electrical and Electronics Engineering), la ACM, y recientemente también por la AAAI (Association for the Advancement of Artificial Intelligence).
+En 2008 se presentaron lineamientos generales para un currículo en Ciencias de la Computación que se diferencia claramente de otros perfiles, como la Ingeniería Computacional o la Ingeniería de Software. En 2013 se realizó un ajuste al currículo, dando un énfasis importante a las diferentes áreas de conocimiento. En 2024 se presenta una nueva modificación, tomando en cuenta los últimos avances y retos en el área, y poniendo un énfasis importante en la formación de competencias en los estudiantes. En este rediseño se consideraron las distintas áreas de conocimiento, así como las competencias esperadas en un egresado de una licenciatura en Ciencias de la Computación a nivel internacional.
+Liga al proyecto de reestructuración.
+2023 Licenciatura en Ciencias de la Computación | Departamento de Matemáticas | Universidad de Sonora

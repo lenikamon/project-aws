@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import tempfile
 import pymupdf4llm 
+import pymupdf4llm.layout
 
 # --- CONFIGURACIÓN Y LOGGING ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
